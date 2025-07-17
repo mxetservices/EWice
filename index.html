@@ -32,7 +32,7 @@
         .main-content { background: var(--white-bg); border-radius: 12px; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08); overflow: hidden; }
         
         .hero { padding: 60px 30px; background-image: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), url('assets/hero-bg.jpg'); background-size: cover; background-position: center; color: white; text-align: center; }
-        .hero .logo-text { font-weight: 700; font-size: 2.5rem; color: var(--primary-yellow); }
+        .hero-logo { max-width: 180px; height: auto; margin-bottom: 1.5rem; }
         .hero h1 { font-size: 2rem; font-weight: 700; margin-top: 0.5rem; margin-bottom: 0.5rem; }
 
         .calculator-grid { display: grid; grid-template-columns: 1fr 1.2fr; gap: 40px; padding: 40px; }
@@ -81,7 +81,7 @@
 
         @media (max-width: 820px) {
             .calculator-grid { grid-template-columns: 1fr; }
-            .hero .logo-text { font-size: 2rem; } .hero h1 { font-size: 1.8rem; }
+            .hero-logo { max-width: 150px; } .hero h1 { font-size: 1.8rem; }
             .container { margin: 1rem auto; } .contact-info { flex-direction: column; gap: 15px; }
         }
     </style>
@@ -90,7 +90,7 @@
     <div class="container">
         <div class="main-content">
             <header class="hero">
-                <div class="logo-text">E-WICE LAUNDRY</div>
+                <img src="assets/ewice-logo.png" alt="E-Wice Laundry Logo" class="hero-logo">
                 <h1>Let Us Save You TIME, MONEY, And STRESS!</h1>
             </header>
             <main>
@@ -119,9 +119,7 @@
                         <div class="result-line subtle">
                             <span>Direct Running Costs
                                 <i class="far fa-lightbulb tooltip-icon">
-                                    <span class="tooltip-text">
-                                        Includes detergent & supplies. Also features a comprehensive energy estimate for washing & power-intensive ironing, reflecting typical costs from grid, generator, or other sources.
-                                    </span>
+                                    <span class="tooltip-text">Includes detergent & supplies. Also features a comprehensive energy estimate for washing & power-intensive ironing, reflecting typical costs from grid, generator, or other sources.</span>
                                 </i>
                             </span>
                             <span id="directRunningCost" class="value">₦0</span>
@@ -129,9 +127,7 @@
                         <div class="result-line subtle">
                             <span>Equipment Costs
                                  <i class="far fa-lightbulb tooltip-icon">
-                                    <span class="tooltip-text">
-                                        Based on the pro-rated cost of buying a ₦350k machine and funding its maintenance & repairs over a 5-year lifespan.
-                                    </span>
+                                    <span class="tooltip-text">Based on the pro-rated cost of buying a ₦350k machine and funding its maintenance & repairs over a 5-year lifespan.</span>
                                 </i>
                             </span>
                             <span id="equipmentCost" class="value">₦0</span>
@@ -247,10 +243,11 @@
         function updateDynamicMessage(netMonthly, fee, plan, hours) {
             let message = ""; let messageClass = "investment";
             const netAnnual = netMonthly * 12; const annualHours = hours * 12;
+            const clothesVal = parseInt(ui.clothes.value); const bedsheetsVal = parseInt(ui.bedsheets.value); const duvetsVal = parseInt(ui.duvets.value);
 
-            if (plan === "Custom Plan" && (parseInt(ui.clothes.value) > 80 || parseInt(ui.bedsheets.value) > 8 || parseInt(ui.duvets.value) > 3) ) {
+            if (plan === "Custom Plan" && (clothesVal > 80 || bedsheetsVal > 8 || duvetsVal > 3) ) {
                  message = `<h3>A Plan as Unique as Your Needs!</h3><p>Your laundry volume is perfect for a custom solution. We can create a personalized plan just for you.</p><p>Please <b>contact us via WhatsApp</b> to get your tailored quote! 🚀</p>`;
-            } else if (!ui.clothes.value && !ui.bedsheets.value && !ui.duvets.value) {
+            } else if (!clothesVal && !bedsheetsVal && !duvetsVal) {
                  message = `<h3>Let's Crunch the Numbers!</h3><p>Fill in your details to see a complete breakdown of your real laundry costs and potential savings.</p>`;
             } else if (netMonthly > 0) {
                 messageClass = "positive-saving";
