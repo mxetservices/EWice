@@ -48,18 +48,20 @@
         .result-line.grand-total { font-weight: 700; font-size: 1.2rem; background-color: #e9e9e9; padding: 15px; margin-top: 10px;}
         .result-line .value { font-weight: 600; }
         
-        .ewice-comparison { margin-top: 20px; }
-        
-        .dynamic-message { padding: 25px; border-radius: 12px; text-align: center; transition: all 0.3s ease; margin-top: auto; }
+        .dynamic-message { padding: 25px; border-radius: 12px; text-align: center; transition: all 0.3s ease; margin-top: 20px; }
         .dynamic-message.positive-saving { background-color: var(--success-green-bg); color: var(--success-green-text); }
         .dynamic-message.investment { background-color: var(--warning-yellow-bg); color: var(--warning-yellow-text); }
         .dynamic-message h3 { margin-bottom: 10px; font-size: 1.2rem;}
         .dynamic-message p { margin: 5px 0; }
         .dynamic-message b { font-weight: 700; }
 
-        .subscribe-button-top { display: block; width: 100%; background-color: #25D366; color: white; text-align: center; padding: 12px; border-radius: 8px; text-decoration: none; font-weight: 600; font-size: 1.1rem; margin-top: 15px; transition: transform 0.2s ease;}
-        .subscribe-button-top:hover { transform: scale(1.03); }
+        .subscribe-button-inline { display: inline-block; background-color: #25D366; color: white; text-align: center; padding: 8px 25px; border-radius: 50px; text-decoration: none; font-weight: 600; font-size: 0.95rem; margin-top: 20px; transition: transform 0.2s ease;}
+        .subscribe-button-inline:hover { transform: scale(1.05); }
         
+        .initially-hidden { display: none; opacity: 0; transition: opacity 0.5s ease-in-out;}
+        .visible { display: block !important; opacity: 1 !important;}
+        .group-visible { display: flex !important; opacity: 1 !important;}
+
         .section-divider { border: 0; height: 1px; background-color: #f0f0f0; margin: 0;}
         .padded-section { padding: 40px; text-align: center; background: #fdfdfd;}
         .benefits-list { list-style: none; display: inline-block; text-align: left; margin-top: 20px; padding: 0;}
@@ -107,7 +109,6 @@
     </style>
 </head>
 <body>
-
     <div class="container">
         <div class="main-content">
             <header class="hero">
@@ -137,35 +138,39 @@
                     </div>
                     <div class="results-section" aria-live="polite" aria-atomic="true">
                         <h2>Your Personalized Analysis</h2>
-                        <div class="result-line subtle">
-                            <span>Direct Running Costs
-                                <i class="far fa-lightbulb tooltip-icon">
-                                    <span class="tooltip-text">A comprehensive energy estimate for washing & power-intensive ironing, plus costs for detergent & supplies.</span>
-                                </i>
-                            </span>
-                            <span id="directRunningCost" class="value">₦0</span>
-                        </div>
-                        <div class="result-line subtle">
-                            <span>Equipment Costs
-                                 <i class="far fa-lightbulb tooltip-icon">
-                                    <span class="tooltip-text">Based on the pro-rated cost of buying a ₦350k machine and funding its maintenance & repairs over a 5-year lifespan.</span>
-                                </i>
-                            </span>
-                            <span id="equipmentCost" class="value">₦0</span>
-                        </div>
-                        <div class="result-line subtotal"><span>Total Monthly Direct Costs</span><span id="totalDirectCost" class="value">₦0</span></div>
-                        <div class="result-line subtle"><span>Value of Your Weekend Time</span><span id="timeCost" class="value">₦0</span></div>
-                        <div class="result-line grand-total"><span>Your TRUE Monthly At-Home Cost</span><span id="trueAtHomeCost" class="value">₦0</span></div>
-                        
-                        <a id="subscribe-now-top" href="#" target="_blank" class="subscribe-button-top"><i class="fab fa-whatsapp"></i> Subscribe Now</a>
 
-                        <div class="ewice-comparison">
-                            <div class="result-line"><span>Recommended E-Wice Plan:</span><span id="planName" class="value">-</span></div>
-                            <div class="result-line"><span>E-Wice Service Fee:</span><span id="ewiceFee" class="value">₦0</span></div>
+                        <div id="results-wrapper" class="initially-hidden">
+                            <div class="result-line subtle">
+                                <span>Direct Running Costs
+                                    <i class="far fa-lightbulb tooltip-icon">
+                                        <span class="tooltip-text">A comprehensive energy estimate for washing & power-intensive ironing, plus costs for detergent & supplies.</span>
+                                    </i>
+                                </span>
+                                <span id="directRunningCost" class="value">₦0</span>
+                            </div>
+                            <div class="result-line subtle">
+                                <span>Equipment Costs
+                                     <i class="far fa-lightbulb tooltip-icon">
+                                        <span class="tooltip-text">Based on the pro-rated cost of buying a ₦350k machine and funding its maintenance & repairs over a 5-year lifespan.</span>
+                                    </i>
+                                </span>
+                                <span id="equipmentCost" class="value">₦0</span>
+                            </div>
+                            <div class="result-line subtotal"><span>Total Monthly Direct Costs</span><span id="totalDirectCost" class="value">₦0</span></div>
+                            <div class="result-line subtle"><span>Value of Your Weekend Time</span><span id="timeCost" class="value">₦0</span></div>
+                            <div class="result-line grand-total"><span>Your TRUE Monthly At-Home Cost</span><span id="trueAtHomeCost" class="value">₦0</span></div>
+                            <div class="ewice-comparison">
+                                <div class="result-line"><span>Recommended E-Wice Plan:</span><span id="planName" class="value">-</span></div>
+                                <div class="result-line"><span>E-Wice Service Fee:</span><span id="ewiceFee" class="value">₦0</span></div>
+                            </div>
                         </div>
+
                         <div id="dynamicMessage" class="dynamic-message investment" aria-live="polite" aria-atomic="true">
                            <h3>Let's Crunch the Numbers!</h3>
-                           <p>Fill in your details to see a complete breakdown of your real laundry costs and potential savings.</p>
+                           <p>Enter your income to begin your personalized cost analysis.</p>
+                        </div>
+                        <div class="initially-hidden" style="text-align: center;" id="inline-cta-wrapper">
+                             <a id="subscribe-now-inline" href="#" target="_blank" class="subscribe-button-inline">Subscribe</a>
                         </div>
                     </div>
                 </div>
@@ -254,25 +259,36 @@
                 "Monthly Standard": { price: 36000, clothes: 30, bedsheets: 2, duvets: 1 },
                 "Annually Standard": { price: 30000, clothes: 35, bedsheets: 6, duvets: 2 },
                 "Monthly Premium": { price: 50000, clothes: 50, bedsheets: 6, duvets: 3 },
-                "Annually Premium": { price: 41667, clothes: 80, bedsheets: 8, duvets: 3 },
-                "Custom Plan": { price: 0 }
+                "Annually Premium": { price: 41667, clothes: 80, bedsheets: 8, duvets: 3 }
             },
             contact: { whatsappNumber: "2349134703434", defaultWhatsappMessage: "Hello E-Wice, based on your calculator, my recommended plan is: " }
         };
 
         const ui = {
             salary: document.getElementById('salary'), clothes: document.getElementById('clothes'), bedsheets: document.getElementById('bedsheets'), duvets: document.getElementById('duvets'),
+            resultsWrapper: document.getElementById('results-wrapper'),
             directRunningCost: document.getElementById('directRunningCost'), equipmentCost: document.getElementById('equipmentCost'),
             totalDirectCost: document.getElementById('totalDirectCost'), timeCost: document.getElementById('timeCost'),
             trueAtHomeCost: document.getElementById('trueAtHomeCost'), planName: document.getElementById('planName'),
             ewiceFee: document.getElementById('ewiceFee'), dynamicMessage: document.getElementById('dynamicMessage'),
-            subscribeNowTop: document.getElementById('subscribe-now-top'),
+            inlineCtaWrapper: document.getElementById('inline-cta-wrapper'),
+            subscribeNowInline: document.getElementById('subscribe-now-inline'),
             whatsappCtaBottom: document.getElementById('whatsapp-cta-bottom'), year: document.getElementById('year'),
             planCards: document.querySelectorAll('.plan-card'),
             planCtas: document.querySelectorAll('.plan-cta')
         };
         
+        let hasStarted = false;
         ui.year.textContent = new Date().getFullYear();
+
+        function revealCalculator() {
+            if (!hasStarted) {
+                ui.resultsWrapper.classList.add('visible');
+                ui.inlineCtaWrapper.classList.add('visible');
+                hasStarted = true;
+            }
+        }
+        ui.salary.addEventListener('input', revealCalculator);
 
         function calculate() {
             const monthlySalary = Math.abs(parseFloat(ui.salary.value) || 0);
@@ -298,19 +314,24 @@
             
             const trueTotalAtHomeCost = totalMonthlyDirectCost + totalMonthlyTimeCost;
 
-            let recommendedPlan = "Custom Plan";
+            let isCustom = false;
+            let recommendedPlan = "Monthly Standard";
             if (numClothes > 0 || numBedsheets > 0 || numDuvets > 0) {
                  if (numClothes <= 30 && numBedsheets <= 2 && numDuvets <= 1) recommendedPlan = "Monthly Standard";
                  else if (numClothes <= 35 && numBedsheets <= 6 && numDuvets <= 2) recommendedPlan = "Annually Standard";
                  else if (numClothes <= 50 && numBedsheets <= 6 && numDuvets <= 3) recommendedPlan = "Monthly Premium";
                  else if (numClothes <= 80 && numBedsheets <= 8 && numDuvets <= 3) recommendedPlan = "Annually Premium";
+                 else {
+                     recommendedPlan = "Annually Premium";
+                     isCustom = true;
+                 }
             }
             
             const ewiceServiceFee = SETTINGS.plans[recommendedPlan]?.price || 0;
             const netMonthlySavings = trueTotalAtHomeCost - ewiceServiceFee;
 
             updateUI(trueTotalAtHomeCost, monthlyDirectRunningCost, monthlyEquipmentCost, totalMonthlyDirectCost, totalMonthlyTimeCost, recommendedPlan, ewiceServiceFee);
-            updateDynamicMessage(netMonthlySavings, ewiceServiceFee, recommendedPlan, hoursSpentPerMonth);
+            updateDynamicMessage(netMonthlySavings, ewiceServiceFee, isCustom, hoursSpentPerMonth);
             updateWhatsappLink(recommendedPlan);
             highlightPlanCard(recommendedPlan);
         }
@@ -319,18 +340,17 @@
             ui.directRunningCost.textContent = formatNaira(directCost); ui.equipmentCost.textContent = formatNaira(equipCost);
             ui.totalDirectCost.textContent = formatNaira(totalDirect); ui.timeCost.textContent = formatNaira(timeCost);
             ui.trueAtHomeCost.textContent = formatNaira(trueCost); ui.planName.textContent = plan;
-            ui.ewiceFee.textContent = (plan !== "Custom Plan") ? formatNaira(fee) : "—";
+            ui.ewiceFee.textContent = formatNaira(fee);
         }
 
-        function updateDynamicMessage(netMonthly, fee, plan, hours) {
+        function updateDynamicMessage(netMonthly, fee, isCustom, hours) {
             let message = ""; let messageClass = "investment";
             const netAnnual = netMonthly * 12; const annualHours = hours * 12;
-            const clothesVal = parseInt(ui.clothes.value) || 0; const bedsheetsVal = parseInt(ui.bedsheets.value) || 0; const duvetsVal = parseInt(ui.duvets.value) || 0;
 
-            if (plan === "Custom Plan" && (clothesVal > 80 || bedsheetsVal > 8 || duvetsVal > 3) ) {
-                 message = `<h3>A Plan as Unique as Your Needs!</h3><p>Your laundry volume is perfect for a custom solution. We can create a personalized plan just for you.</p><p>Please <b>contact us via WhatsApp</b> to get your tailored quote! 🚀</p>`;
-            } else if (!clothesVal && !bedsheetsVal && !duvetsVal) {
-                 message = `<h3>Let's Crunch the Numbers!</h3><p>Fill in your details to see a complete breakdown of your real laundry costs and potential savings.</p>`;
+            if (!hasStarted) {
+                message = `<h3>Let's Crunch the Numbers!</h3><p>Enter your income to begin your personalized cost analysis.</p>`;
+            } else if (isCustom) {
+                 message = `<h3>A Plan as Unique as Your Needs!</h3><p>Your laundry volume may require a custom solution. Our top plan is recommended as a starting point.</p><p>Please <b>contact us via WhatsApp</b> to get your tailored quote! 🚀</p>`;
             } else if (netMonthly > 0) {
                 messageClass = "positive-saving";
                 message = `<h3>This is a Logical Financial Decision.</h3><p>You will <b>save ${formatNaira(netMonthly)} monthly</b>, which is over <b>${formatNaira(netAnnual)} back in your pocket annually.</b></p><p>You also reclaim over <b>${Math.round(annualHours)} hours per year</b> — like getting weeks of your life back. 🚀</p>`;
@@ -358,8 +378,8 @@
 
         function updateWhatsappLink(recommendedPlan) {
             const link = getWhatsAppLink(recommendedPlan);
-            ui.subscribeNowTop.href = link;
-            ui.whatsappCtaBottom.href = link;
+            ui.subscribeNowInline.href = link;
+            ui.whatsappCtaBottom.href = getWhatsAppLink("Questions");
             ui.planCtas.forEach(cta => {
                 const planName = cta.dataset.plan;
                 cta.href = getWhatsAppLink(planName);
