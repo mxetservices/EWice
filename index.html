@@ -57,10 +57,28 @@
         .dynamic-message p { margin: 5px 0; }
         .dynamic-message b { font-weight: 700; }
 
-        .benefits-section { background-color: #fdfdfd; padding: 40px; text-align: center; border-top: 1px solid #f0f0f0; }
+        .subscribe-button-top { display: block; width: 100%; background-color: #25D366; color: white; text-align: center; padding: 12px; border-radius: 8px; text-decoration: none; font-weight: 600; font-size: 1.1rem; margin-top: 15px; transition: transform 0.2s ease;}
+        .subscribe-button-top:hover { transform: scale(1.03); }
+        
+        .section-divider { border: 0; height: 1px; background-color: #f0f0f0; margin: 0;}
+        .padded-section { padding: 40px; text-align: center; background: #fdfdfd;}
         .benefits-list { list-style: none; display: inline-block; text-align: left; margin-top: 20px; padding: 0;}
-        .benefits-list li { margin-bottom: 12px; font-size: 1.1rem; }
-        .cta-section { padding: 40px; text-align: center; background: #fff; border-top: 1px solid #f0f0f0;}
+        .benefits-list li { margin-bottom: 12px; font-size: 1.1rem; font-weight: 500;}
+
+        .plan-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 25px; margin-top: 30px;}
+        .plan-card { border: 2px solid var(--border-color); padding: 25px; border-radius: 12px; text-align: left; display: flex; flex-direction: column; transition: all 0.3s ease; position: relative; overflow: hidden; background: var(--white-bg); }
+        .plan-card h3 { font-size: 1.3rem; margin-bottom: 10px;}
+        .plan-card .price { font-size: 1.8rem; font-weight: 700; color: var(--dark-text); margin-bottom: 15px;}
+        .plan-card .price span { font-size: 1rem; font-weight: 400; color: #777;}
+        .plan-card ul { list-style-type: none; margin: 0 0 20px 0; padding: 0; flex-grow: 1;}
+        .plan-card li { margin-bottom: 8px; padding-left: 25px; position: relative;}
+        .plan-card li::before { content: '✔'; position: absolute; left: 0; color: #25D366;}
+        .plan-cta { display: block; background-color: var(--dark-text); color: var(--primary-yellow); padding: 12px; border-radius: 8px; text-decoration: none; font-weight: 600; text-align: center; transition: background-color 0.2s ease;}
+        .plan-cta:hover { background-color: #000; color: #fff; }
+        .plan-card.recommended { border-color: var(--primary-yellow); transform: scale(1.05); box-shadow: 0 8px 30px rgba(255, 215, 0, 0.3); z-index: 10;}
+        .plan-card.recommended::after { content: 'Recommended'; background: var(--primary-yellow); color: var(--dark-text); padding: 4px 30px; position: absolute; top: 18px; right: -30px; transform: rotate(45deg); font-size: 0.8rem; font-weight: 700;}
+
+        .cta-section { padding: 40px; text-align: center; background: var(--light-bg);}
         .cta-button { display: inline-block; background-color: var(--primary-yellow); color: #000; padding: 15px 40px; border-radius: 50px; text-decoration: none; font-size: 1.2rem; font-weight: 700; transition: transform 0.2s ease, box-shadow 0.2s ease; border: 1px solid #333; }
         .cta-button:hover { transform: translateY(-3px); box-shadow: 0 4px 15px rgba(255, 215, 0, 0.4); }
         
@@ -79,14 +97,17 @@
 
         .invalid-input { border-color: var(--error-red) !important; }
 
-        @media (max-width: 820px) {
+        @media (max-width: 900px) {
             .calculator-grid { grid-template-columns: 1fr; }
+        }
+        @media (max-width: 768px) {
             .hero-logo { max-width: 150px; } .hero h1 { font-size: 1.8rem; }
             .container { margin: 1rem auto; } .contact-info { flex-direction: column; gap: 15px; }
         }
     </style>
 </head>
 <body>
+
     <div class="container">
         <div class="main-content">
             <header class="hero">
@@ -98,11 +119,11 @@
                     <div class="inputs-section">
                         <h2>Do You Know the <em>Real</em> Cost of DIY Laundry?</h2>
                         <div class="input-group">
-                            <label for="salary">Monthly Salary (NGN)</label>
+                            <label for="salary">Monthly Income (Individual or Household)</label>
                             <input type="number" id="salary" placeholder="e.g., 339000" oninput="calculate()" onblur="validateInput(this)">
                         </div>
                         <div class="input-group">
-                            <label for="clothes">Number of Clothes Units</label>
+                            <label for="clothes">Number of Clothes</label>
                             <input type="number" id="clothes" placeholder="e.g., 30" oninput="calculate()" onblur="validateInput(this)">
                         </div>
                         <div class="input-group">
@@ -119,7 +140,7 @@
                         <div class="result-line subtle">
                             <span>Direct Running Costs
                                 <i class="far fa-lightbulb tooltip-icon">
-                                    <span class="tooltip-text">Includes detergent & supplies. Also features a comprehensive energy estimate for washing & power-intensive ironing, reflecting typical costs from grid, generator, or other sources.</span>
+                                    <span class="tooltip-text">A comprehensive energy estimate for washing & power-intensive ironing, plus costs for detergent & supplies.</span>
                                 </i>
                             </span>
                             <span id="directRunningCost" class="value">₦0</span>
@@ -135,6 +156,9 @@
                         <div class="result-line subtotal"><span>Total Monthly Direct Costs</span><span id="totalDirectCost" class="value">₦0</span></div>
                         <div class="result-line subtle"><span>Value of Your Weekend Time</span><span id="timeCost" class="value">₦0</span></div>
                         <div class="result-line grand-total"><span>Your TRUE Monthly At-Home Cost</span><span id="trueAtHomeCost" class="value">₦0</span></div>
+                        
+                        <a id="subscribe-now-top" href="#" target="_blank" class="subscribe-button-top"><i class="fab fa-whatsapp"></i> Subscribe Now</a>
+
                         <div class="ewice-comparison">
                             <div class="result-line"><span>Recommended E-Wice Plan:</span><span id="planName" class="value">-</span></div>
                             <div class="result-line"><span>E-Wice Service Fee:</span><span id="ewiceFee" class="value">₦0</span></div>
@@ -145,21 +169,74 @@
                         </div>
                     </div>
                 </div>
-                <section class="benefits-section">
-                    <h2>Stop Paying the Hidden Costs. Upgrade Your Lifestyle.</h2>
+                
+                <hr class="section-divider">
+
+                <section class="padded-section">
+                    <h2>Stop Paying Hidden Costs. Upgrade Your Lifestyle.</h2>
                     <ul class="benefits-list">
-                        <li>✅ **Financial Predictability:** One fixed fee. No surprise costs for detergent, power, or machine repairs.</li>
-                        <li>✨ **Reclaim Your Life:** Gain back dozens of hours every year. What is your time worth?</li>
-                        <li>👕 **Protect Your Investment:** Our professional care extends the life of your clothes, preventing costly damage from home washing.</li>
-                        <li>🧠 **Eliminate Mental Load:** We handle the logistics, you enjoy the peace of mind.</li>
+                        <li>✅ Financial Predictability: One fixed fee for all your laundry needs.</li>
+                        <li>✅ Reclaim Your Life: Gain back dozens of hours every single year.</li>
+                        <li>✅ Protect Your Investment: Professional care extends the life of your clothes.</li>
+                        <li>✅ Eliminate Mental Load: We handle all the logistics, you enjoy the peace.</li>
                     </ul>
                 </section>
+                
+                <hr class="section-divider">
+
+                <section id="plans-section" class="padded-section" style="background: var(--white-bg);">
+                    <h2>Choose Your Perfect Plan</h2>
+                    <div class="plan-grid">
+                        <div class="plan-card" id="card-Monthly-Standard">
+                             <h3>Monthly Standard</h3>
+                             <div class="price">₦36,000 <span>/ month</span></div>
+                             <ul>
+                                 <li>30 Clothes</li>
+                                 <li>2 Bedsheets</li>
+                                 <li>1 Duvet</li>
+                             </ul>
+                             <a href="#" class="plan-cta" data-plan="Monthly Standard">Choose Plan</a>
+                        </div>
+                        <div class="plan-card" id="card-Monthly-Premium">
+                             <h3>Monthly Premium</h3>
+                             <div class="price">₦50,000 <span>/ month</span></div>
+                             <ul>
+                                 <li>50 Clothes</li>
+                                 <li>6 Bedsheets</li>
+                                 <li>3 Duvets</li>
+                             </ul>
+                             <a href="#" class="plan-cta" data-plan="Monthly Premium">Choose Plan</a>
+                        </div>
+                        <div class="plan-card" id="card-Annually-Standard">
+                             <h3>Annually Standard</h3>
+                             <div class="price">₦30,000 <span>/ month</span></div>
+                             <ul>
+                                 <li>35 Clothes</li>
+                                 <li>6 Bedsheets</li>
+                                 <li>2 Duvets</li>
+                             </ul>
+                             <a href="#" class="plan-cta" data-plan="Annually Standard">Choose Plan</a>
+                        </div>
+                        <div class="plan-card" id="card-Annually-Premium">
+                             <h3>Annually Premium</h3>
+                             <div class="price">₦41,667 <span>/ month</span></div>
+                             <ul>
+                                 <li>80 Clothes</li>
+                                 <li>8 Bedsheets</li>
+                                 <li>3 Duvets</li>
+                             </ul>
+                             <a href="#" class="plan-cta" data-plan="Annually Premium">Choose Plan</a>
+                        </div>
+                    </div>
+                </section>
+                
                 <section class="cta-section">
-                     <a id="whatsapp-cta" href="#" target="_blank" class="cta-button">Subscribe Now via WhatsApp!</a>
+                     <a id="whatsapp-cta-bottom" href="#" target="_blank" class="cta-button">Have Questions? Contact Us</a>
                 </section>
             </main>
         </div>
-        <footer>
+
+        <footer class="footer">
             <div class="contact-info">
                 <a href="https://wa.me/2349134703434" target="_blank"><i class="fab fa-whatsapp"></i>09134703434</a>
                 <a href="https://www.instagram.com/ewice_proservices" target="_blank"><i class="fab fa-instagram"></i>@ewice_proservices</a>
@@ -168,6 +245,7 @@
             <p>© <span id="year"></span> EWice Professional Services. All Rights Reserved. | Designed by <a href="https://mxetservices.github.io/mxet/" target="_blank" rel="noopener noreferrer">MXET</a></p>
         </footer>
     </div>
+
     <script>
         const COST_COMPONENTS = { energy: 562.50, supplies: 350.00, water: 60.00, depreciation: 450.00, maintenance: 45.00 };
         const SETTINGS = {
@@ -188,7 +266,10 @@
             totalDirectCost: document.getElementById('totalDirectCost'), timeCost: document.getElementById('timeCost'),
             trueAtHomeCost: document.getElementById('trueAtHomeCost'), planName: document.getElementById('planName'),
             ewiceFee: document.getElementById('ewiceFee'), dynamicMessage: document.getElementById('dynamicMessage'),
-            whatsappCta: document.getElementById('whatsapp-cta'), year: document.getElementById('year')
+            subscribeNowTop: document.getElementById('subscribe-now-top'),
+            whatsappCtaBottom: document.getElementById('whatsapp-cta-bottom'), year: document.getElementById('year'),
+            planCards: document.querySelectorAll('.plan-card'),
+            planCtas: document.querySelectorAll('.plan-cta')
         };
         
         ui.year.textContent = new Date().getFullYear();
@@ -231,6 +312,7 @@
             updateUI(trueTotalAtHomeCost, monthlyDirectRunningCost, monthlyEquipmentCost, totalMonthlyDirectCost, totalMonthlyTimeCost, recommendedPlan, ewiceServiceFee);
             updateDynamicMessage(netMonthlySavings, ewiceServiceFee, recommendedPlan, hoursSpentPerMonth);
             updateWhatsappLink(recommendedPlan);
+            highlightPlanCard(recommendedPlan);
         }
 
         function updateUI(trueCost, directCost, equipCost, totalDirect, timeCost, plan, fee) {
@@ -243,7 +325,7 @@
         function updateDynamicMessage(netMonthly, fee, plan, hours) {
             let message = ""; let messageClass = "investment";
             const netAnnual = netMonthly * 12; const annualHours = hours * 12;
-            const clothesVal = parseInt(ui.clothes.value); const bedsheetsVal = parseInt(ui.bedsheets.value); const duvetsVal = parseInt(ui.duvets.value);
+            const clothesVal = parseInt(ui.clothes.value) || 0; const bedsheetsVal = parseInt(ui.bedsheets.value) || 0; const duvetsVal = parseInt(ui.duvets.value) || 0;
 
             if (plan === "Custom Plan" && (clothesVal > 80 || bedsheetsVal > 8 || duvetsVal > 3) ) {
                  message = `<h3>A Plan as Unique as Your Needs!</h3><p>Your laundry volume is perfect for a custom solution. We can create a personalized plan just for you.</p><p>Please <b>contact us via WhatsApp</b> to get your tailored quote! 🚀</p>`;
@@ -269,9 +351,28 @@
             return new Intl.NumberFormat('en-NG', { style: 'currency', currency: 'NGN', minimumFractionDigits: 0 }).format(amount);
         }
 
-        function updateWhatsappLink(plan) {
-            const message = encodeURIComponent(`${SETTINGS.contact.defaultWhatsappMessage}${plan}.`);
-            ui.whatsappCta.href = `https://wa.me/${SETTINGS.contact.whatsappNumber}?text=${message}`;
+        function getWhatsAppLink(planName) {
+            const message = encodeURIComponent(`${SETTINGS.contact.defaultWhatsappMessage}${planName}.`);
+            return `https://wa.me/${SETTINGS.contact.whatsappNumber}?text=${message}`;
+        }
+
+        function updateWhatsappLink(recommendedPlan) {
+            const link = getWhatsAppLink(recommendedPlan);
+            ui.subscribeNowTop.href = link;
+            ui.whatsappCtaBottom.href = link;
+            ui.planCtas.forEach(cta => {
+                const planName = cta.dataset.plan;
+                cta.href = getWhatsAppLink(planName);
+            });
+        }
+        
+        function highlightPlanCard(plan) {
+            const planId = `card-${plan.replace(/ /g, '-')}`;
+            ui.planCards.forEach(card => card.classList.remove('recommended'));
+            const recommendedCard = document.getElementById(planId);
+            if (recommendedCard) {
+                recommendedCard.classList.add('recommended');
+            }
         }
         
         calculate();
