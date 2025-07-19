@@ -25,6 +25,7 @@
             --error-red: #d9534f;
         }
 
+        html { scroll-behavior: smooth; }
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body { font-family: 'Poppins', sans-serif; background-color: var(--light-bg); color: var(--dark-text); line-height: 1.6; }
 
@@ -38,15 +39,21 @@
         .calculator-grid { display: grid; grid-template-columns: 1fr 1.2fr; gap: 40px; padding: 40px; }
         h2 { font-size: 1.6rem; font-weight: 600; margin-bottom: 20px; color: var(--dark-text); }
         h2 em { color: var(--primary-yellow); font-style: normal; text-shadow: 1px 1px 2px rgba(0,0,0,0.1); }
+        .input-group { margin-bottom: 20px; }
         .input-group label { display: block; font-weight: 600; margin-bottom: 6px; }
         .input-group input { width: 100%; padding: 12px; border: 1px solid var(--border-color); border-radius: 8px; font-size: 1rem; font-family: 'Poppins', sans-serif; transition: border-color 0.2s ease; }
         
+        #calculate-btn { width: 100%; padding: 15px; font-size: 1.2rem; font-weight: 700; background: var(--primary-yellow); color: var(--dark-text); border: 1px solid #333; border-radius: 8px; cursor: pointer; transition: all 0.3s ease; }
+        #calculate-btn:hover:not(:disabled) { transform: translateY(-2px); box-shadow: 0 4px 15px rgba(255, 215, 0, 0.3); }
+        #calculate-btn:disabled { background: #e0e0e0; border-color: #ccc; color: #999; cursor: not-allowed; }
+
         .results-section { display: flex; flex-direction: column; gap: 12px; }
         .result-line { display: flex; justify-content: space-between; align-items: center; padding: 10px 15px; border-radius: 8px; font-size: 0.95rem;}
         .result-line.subtle { background-color: #fafafa; color: #555;}
         .result-line.subtotal { font-weight: 600; background-color: #f1f1f1; margin-top: 5px;}
         .result-line.grand-total { font-weight: 700; font-size: 1.2rem; background-color: #e9e9e9; padding: 15px; margin-top: 10px;}
-        .result-line .value { font-weight: 600; }
+        .result-line .value, .result-line .plan-link { font-weight: 600; }
+        .result-line .plan-link { color: var(--dark-text); text-decoration: underline; cursor: pointer; }
         
         .dynamic-message { padding: 25px; border-radius: 12px; text-align: center; transition: all 0.3s ease; margin-top: 20px; }
         .dynamic-message.positive-saving { background-color: var(--success-green-bg); color: var(--success-green-text); }
@@ -57,7 +64,7 @@
 
         .initially-hidden { display: none; opacity: 0; transition: opacity 0.5s ease-in-out;}
         .visible { display: block !important; opacity: 1 !important;}
-
+        
         .section-divider { border: 0; height: 1px; background-color: #f0f0f0; margin: 0;}
         .padded-section { padding: 40px; text-align: center; background: #fdfdfd;}
         .benefits-list { list-style: none; display: inline-block; text-align: left; margin-top: 20px; padding: 0;}
@@ -73,14 +80,14 @@
         .plan-card li::before { content: '✔'; position: absolute; left: 0; color: #25D366;}
         .plan-cta { display: block; background-color: var(--dark-text); color: var(--primary-yellow); padding: 12px; border-radius: 8px; text-decoration: none; font-weight: 600; text-align: center; transition: background-color 0.2s ease;}
         .plan-cta:hover { background-color: #000; color: #fff; }
-        .plan-card.recommended { border-color: var(--primary-yellow); transform: scale(1.05); box-shadow: 0 8px 30px rgba(255, 215, 0, 0.3); z-index: 10;}
-        .plan-card.recommended::after { content: 'Recommended'; background: var(--primary-yellow); color: var(--dark-text); padding: 4px 30px; position: absolute; top: 18px; right: -30px; transform: rotate(45deg); font-size: 0.8rem; font-weight: 700;}
         
-        .cta-section { padding: 40px; text-align: center; background: var(--light-bg);}
-        .cta-button { display: inline-block; background-color: var(--primary-yellow); color: #000; padding: 15px 40px; border-radius: 50px; text-decoration: none; font-size: 1.2rem; font-weight: 700; transition: transform 0.2s ease, box-shadow 0.2s ease; border: 1px solid #333; }
-        .cta-button:hover { transform: translateY(-3px); box-shadow: 0 4px 15px rgba(255, 215, 0, 0.4); }
-        .cta-inline { margin-top: 20px; font-size: 1rem; padding: 10px 30px; }
+        .badge { background: var(--primary-yellow); color: var(--dark-text); padding: 4px 30px; position: absolute; top: 18px; right: -30px; transform: rotate(45deg); font-size: 0.8rem; font-weight: 700;}
+        .plan-card.popular { border-color: var(--border-color); }
+        .plan-card.popular .badge { background-color: #aaa; color: #fff;}
+        .plan-card.recommended { border-color: var(--primary-yellow); transform: scale(1.05); box-shadow: 0 8px 30px rgba(255, 215, 0, 0.3); z-index: 10;}
 
+        .cta-section { padding: 40px; text-align: center; background: var(--light-bg);}
+        
         footer { text-align: center; padding: 2.5rem 1.5rem; background: #2a2a2a; color: #ccc; }
         .contact-info { display: flex; justify-content: center; align-items: center; flex-wrap: wrap; gap: 20px; margin-bottom: 1.5rem; }
         .contact-info a { color: var(--primary-yellow); text-decoration: none; font-size: 1.1rem; transition: color 0.2s ease; }
@@ -96,9 +103,7 @@
 
         .invalid-input { border-color: var(--error-red) !important; }
 
-        @media (max-width: 900px) {
-            .calculator-grid { grid-template-columns: 1fr; }
-        }
+        @media (max-width: 900px) { .calculator-grid { grid-template-columns: 1fr; } }
         @media (max-width: 768px) {
             .hero-logo { max-width: 150px; } .hero h1 { font-size: 1.8rem; }
             .container { margin: 1rem auto; } .contact-info { flex-direction: column; gap: 15px; }
@@ -118,24 +123,24 @@
                         <h2>Do You Know the <em>Real</em> Cost of DIY Laundry?</h2>
                         <div class="input-group">
                             <label for="salary">Monthly Income (Individual or Household)</label>
-                            <input type="number" id="salary" placeholder="e.g., 339000" oninput="calculate()" onblur="validateInput(this)">
+                            <input type="number" id="salary" placeholder="e.g., 339000" oninput="checkInputs()" onblur="validateInput(this)">
                         </div>
                         <div class="input-group">
                             <label for="clothes">Number of Clothes</label>
-                            <input type="number" id="clothes" placeholder="e.g., 30" oninput="calculate()" onblur="validateInput(this)">
+                            <input type="number" id="clothes" placeholder="e.g., 30" oninput="checkInputs()" onblur="validateInput(this)">
                         </div>
                         <div class="input-group">
                             <label for="bedsheets">Number of Bedsheets</label>
-                            <input type="number" id="bedsheets" placeholder="e.g., 2" oninput="calculate()" onblur="validateInput(this)">
+                            <input type="number" id="bedsheets" placeholder="e.g., 2" oninput="checkInputs()" onblur="validateInput(this)">
                         </div>
                         <div class="input-group">
                             <label for="duvets">Number of Duvets</label>
-                            <input type="number" id="duvets" placeholder="e.g., 1" oninput="calculate()" onblur="validateInput(this)">
+                            <input type="number" id="duvets" placeholder="e.g., 1" oninput="checkInputs()" onblur="validateInput(this)">
                         </div>
+                        <button id="calculate-btn" disabled>Show My Real Cost!</button>
                     </div>
                     <div class="results-section" aria-live="polite" aria-atomic="true">
                         <h2>Your Personalized Analysis</h2>
-
                         <div id="results-wrapper" class="initially-hidden">
                             <div class="result-line subtle">
                                 <span>Direct Running Costs
@@ -156,20 +161,15 @@
                             <div class="result-line subtotal"><span>Total Monthly Direct Costs</span><span id="totalDirectCost" class="value">₦0</span></div>
                             <div class="result-line subtle"><span>Value of Your Weekend Time</span><span id="timeCost" class="value">₦0</span></div>
                             <div class="result-line grand-total"><span>Your TRUE Monthly At-Home Cost</span><span id="trueAtHomeCost" class="value">₦0</span></div>
-                            
-                            <div class="ewice-comparison">
-                                <div class="result-line"><span>Recommended E-Wice Plan:</span><span id="planName" class="value">-</span></div>
-                                <div class="result-line"><span>E-Wice Service Fee:</span><span id="ewiceFee" class="value">₦0</span></div>
+                            <div class="result-line">
+                                <span>Recommended Plan:</span>
+                                <a id="planNameLink" class="plan-link">-</a>
                             </div>
+                            <div class="result-line"><span>E-Wice Service Fee:</span><span id="ewiceFee" class="value">₦0</span></div>
                         </div>
-
                         <div id="dynamicMessage" class="dynamic-message investment" aria-live="polite" aria-atomic="true">
                            <h3>Let's Crunch the Numbers!</h3>
-                           <p>Enter your income to begin your personalized cost analysis.</p>
-                        </div>
-
-                        <div class="initially-hidden" style="text-align: center;" id="inline-cta-wrapper">
-                             <a id="subscribe-now-inline" href="#" target="_blank" class="cta-button cta-inline">Subscribe Now</a>
+                           <p>Enter your laundry details to see your real costs.</p>
                         </div>
                     </div>
                 </div>
@@ -191,7 +191,8 @@
                 <section id="plans-section" class="padded-section" style="background: var(--white-bg);">
                     <h2>Choose Your Perfect Plan</h2>
                     <div class="plan-grid">
-                        <div class="plan-card" id="card-Monthly-Standard">
+                        <div class="plan-card popular" id="card-Monthly-Standard">
+                             <div class="badge">POPULAR</div>
                              <h3>Monthly Standard</h3>
                              <div class="price">₦36,000 <span>/ month</span></div>
                              <ul>
@@ -233,10 +234,6 @@
                         </div>
                     </div>
                 </section>
-                
-                <section class="cta-section">
-                     <a id="whatsapp-cta-bottom" href="#" target="_blank" class="cta-button">Have Questions? Contact Us</a>
-                </section>
             </main>
         </div>
 
@@ -265,27 +262,36 @@
 
         const ui = {
             salary: document.getElementById('salary'), clothes: document.getElementById('clothes'), bedsheets: document.getElementById('bedsheets'), duvets: document.getElementById('duvets'),
-            resultsWrapper: document.getElementById('results-wrapper'), inlineCtaWrapper: document.getElementById('inline-cta-wrapper'),
+            calculateBtn: document.getElementById('calculate-btn'),
+            resultsWrapper: document.getElementById('results-wrapper'),
             directRunningCost: document.getElementById('directRunningCost'), equipmentCost: document.getElementById('equipmentCost'),
             totalDirectCost: document.getElementById('totalDirectCost'), timeCost: document.getElementById('timeCost'),
-            trueAtHomeCost: document.getElementById('trueAtHomeCost'), planName: document.getElementById('planName'),
+            trueAtHomeCost: document.getElementById('trueAtHomeCost'), planNameLink: document.getElementById('planNameLink'),
             ewiceFee: document.getElementById('ewiceFee'), dynamicMessage: document.getElementById('dynamicMessage'),
-            subscribeNowInline: document.getElementById('subscribe-now-inline'),
             whatsappCtaBottom: document.getElementById('whatsapp-cta-bottom'), year: document.getElementById('year'),
             planCards: document.querySelectorAll('.plan-card'), planCtas: document.querySelectorAll('.plan-cta')
         };
         
-        let hasStarted = false;
         ui.year.textContent = new Date().getFullYear();
 
+        function checkInputs() {
+            const hasIncome = ui.salary.value.trim() !== '' && parseFloat(ui.salary.value) > 0;
+            const hasClothes = ui.clothes.value.trim() !== '' && parseInt(ui.clothes.value) >= 0;
+            ui.calculateBtn.disabled = !(hasIncome && hasClothes);
+        }
+
         function revealCalculator() {
-            if (!hasStarted) {
-                ui.resultsWrapper.classList.add('visible');
-                ui.inlineCtaWrapper.classList.add('visible');
-                hasStarted = true;
+            ui.resultsWrapper.classList.add('visible');
+            const message = ui.dynamicMessage;
+            if(!message.hasChildNodes() || message.querySelector('h3').textContent === "Let's Crunch the Numbers!") {
+                message.innerHTML = '<h3>Calculating...</h3><p>Your personalized results are being generated.</p>';
             }
         }
-        ui.salary.addEventListener('input', revealCalculator);
+        
+        ui.calculateBtn.addEventListener('click', () => {
+            revealCalculator();
+            calculate();
+        });
 
         function calculate() {
             const monthlySalary = Math.abs(parseFloat(ui.salary.value) || 0);
@@ -295,7 +301,6 @@
 
             const directRunningCostPerLoad = COST_COMPONENTS.energy + COST_COMPONENTS.supplies + COST_COMPONENTS.water;
             const equipmentCostPerLoad = COST_COMPONENTS.depreciation + COST_COMPONENTS.maintenance;
-            
             const extraLoads = (numBedsheets * 0.5) + (numDuvets * 1);
             const regularLoads = Math.ceil(numClothes / 10);
             const totalMonthlyLoads = regularLoads + extraLoads;
@@ -308,18 +313,15 @@
             const hourlyWage = monthlySalary / 160;
             const valueOfWeekendTime = (hourlyWage * 0.5) * SETTINGS.weekendMultiplier;
             const totalMonthlyTimeCost = hoursSpentPerMonth * valueOfWeekendTime;
-            
             const trueTotalAtHomeCost = totalMonthlyDirectCost + totalMonthlyTimeCost;
 
             let isCustom = false;
             let recommendedPlan = "Monthly Standard";
-            if (numClothes > 0 || numBedsheets > 0 || numDuvets > 0) {
-                 if (numClothes <= 30 && numBedsheets <= 2 && numDuvets <= 1) recommendedPlan = "Monthly Standard";
-                 else if (numClothes <= 35 && numBedsheets <= 6 && numDuvets <= 2) recommendedPlan = "Annually Standard";
-                 else if (numClothes <= 50 && numBedsheets <= 6 && numDuvets <= 3) recommendedPlan = "Monthly Premium";
-                 else if (numClothes <= 80 && numBedsheets <= 8 && numDuvets <= 3) recommendedPlan = "Annually Premium";
-                 else { recommendedPlan = "Annually Premium"; isCustom = true; }
-            }
+            if (numClothes <= 30 && numBedsheets <= 2 && numDuvets <= 1) recommendedPlan = "Monthly Standard";
+            else if (numClothes <= 35 && numBedsheets <= 6 && numDuvets <= 2) recommendedPlan = "Annually Standard";
+            else if (numClothes <= 50 && numBedsheets <= 6 && numDuvets <= 3) recommendedPlan = "Monthly Premium";
+            else if (numClothes <= 80 && numBedsheets <= 8 && numDuvets <= 3) recommendedPlan = "Annually Premium";
+            else { recommendedPlan = "Annually Premium"; isCustom = true; }
             
             const ewiceServiceFee = SETTINGS.plans[recommendedPlan]?.price || 0;
             const netMonthlySavings = trueTotalAtHomeCost - ewiceServiceFee;
@@ -333,31 +335,24 @@
         function updateUI(trueCost, directCost, equipCost, totalDirect, timeCost, plan, fee) {
             ui.directRunningCost.textContent = formatNaira(directCost); ui.equipmentCost.textContent = formatNaira(equipCost);
             ui.totalDirectCost.textContent = formatNaira(totalDirect); ui.timeCost.textContent = formatNaira(timeCost);
-            ui.trueAtHomeCost.textContent = formatNaira(trueCost); ui.planName.textContent = plan;
+            ui.trueAtHomeCost.textContent = formatNaira(trueCost);
+            ui.planNameLink.textContent = plan;
+            ui.planNameLink.href = `#card-${plan.replace(/ /g, '-')}`;
             ui.ewiceFee.textContent = formatNaira(fee);
         }
 
         function updateDynamicMessage(netMonthly, isCustom, hours) {
             let message = ""; let messageClass = "investment";
             const netAnnual = netMonthly * 12; const annualHours = hours * 12;
-            let hoursText;
 
-            if(annualHours > 0) {
-                hoursText = `over <b>${Math.round(annualHours)} hours</b>`;
-            } else {
-                hoursText = "hours";
-            }
-
-            if (!hasStarted) {
-                message = `<h3>Let's Crunch the Numbers!</h3><p>Enter your income to begin your personalized cost analysis.</p>`;
-            } else if (isCustom) {
+            if (isCustom) {
                  message = `<h3>A Plan as Unique as Your Needs!</h3><p>Your laundry volume may require a custom solution. Our top plan is recommended as a starting point.</p><p>Please <b>contact us</b> to get your tailored quote! 🚀</p>`;
             } else if (netMonthly > 0) {
                 messageClass = "positive-saving";
-                message = `<h3>This is a Logical Financial Decision.</h3><p>You will <b>save ${formatNaira(netMonthly)} monthly</b>, which is over <b>${formatNaira(netAnnual)} back in your pocket annually.</b></p><p>You also reclaim ${hoursText} per year — like getting weeks of your life back. 🚀</p>`;
+                message = `<h3>This is a Logical Financial Decision.</h3><p>You will <b>save ${formatNaira(netMonthly)} monthly</b>, which is over <b>${formatNaira(netAnnual)} back in your pocket annually.</b></p><p>You also reclaim over <b>${Math.round(annualHours)} hours per year</b> — like getting weeks of your life back. 🚀</p>`;
             } else {
                 messageClass = "investment";
-                message = `<h3>Here's the True Value Proposition.</h3><p>For a small premium of just <b>${formatNaira(Math.abs(netMonthly))} a month</b>, your annual investment in your own convenience is only ${formatNaira(Math.abs(netAnnual))}.</p><p>In exchange, you gain back ${hoursText} of your life every single year. This is a lifestyle upgrade. 🚀</p>`;
+                message = `<h3>Here's the True Value Proposition.</h3><p>For a small premium of just <b>${formatNaira(Math.abs(netMonthly))} a month</b>, your annual investment in your own convenience is only ${formatNaira(Math.abs(netAnnual))}.</p><p>In exchange, you gain back over <b>${Math.round(annualHours)} hours of your life every single year</b>. This is a lifestyle upgrade. 🚀</p>`;
             }
             ui.dynamicMessage.innerHTML = message;
             ui.dynamicMessage.className = `dynamic-message ${messageClass}`;
@@ -378,7 +373,6 @@
         }
 
         function updateWhatsappLink(recommendedPlan) {
-            ui.subscribeNowInline.href = getWhatsAppLink(recommendedPlan);
             ui.whatsappCtaBottom.href = getWhatsAppLink("your services"); 
             ui.planCtas.forEach(cta => {
                 const planName = cta.dataset.plan;
@@ -387,15 +381,24 @@
         }
         
         function highlightPlanCard(plan) {
+            ui.planCards.forEach(card => {
+                card.classList.remove('recommended', 'popular');
+                const badge = card.querySelector('.badge');
+                if(badge) badge.remove();
+            });
+
             const planId = `card-${plan.replace(/ /g, '-')}`;
-            ui.planCards.forEach(card => card.classList.remove('recommended'));
             const recommendedCard = document.getElementById(planId);
             if (recommendedCard) {
                 recommendedCard.classList.add('recommended');
+                const badge = document.createElement('div');
+                badge.className = 'badge';
+                badge.textContent = 'Recommended';
+                recommendedCard.prepend(badge);
             }
         }
         
-        calculate();
+        checkInputs();
     </script>
 </body>
 </html>
