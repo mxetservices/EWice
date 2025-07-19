@@ -18,10 +18,6 @@
             --light-bg: #f8f9fa;
             --white-bg: #ffffff;
             --border-color: #dee2e6;
-            --success-green-bg: #C8E6C9;
-            --warning-yellow-bg: #FFF9C4;
-            --success-green-text: #145214;
-            --warning-yellow-text: #614a00;
             --error-red: #d9534f;
         }
 
@@ -55,9 +51,8 @@
         .result-line .value, .result-line .plan-link { font-weight: 600; }
         .result-line .plan-link { color: var(--dark-text); text-decoration: underline; cursor: pointer; }
         
-        .dynamic-message { padding: 25px; border-radius: 12px; text-align: center; transition: all 0.3s ease; margin-top: 20px; }
-        .dynamic-message.positive-saving { background-color: var(--success-green-bg); color: var(--success-green-text); }
-        .dynamic-message.investment { background-color: var(--warning-yellow-bg); color: var(--warning-yellow-text); }
+        .dynamic-message { padding: 25px; border-radius: 12px; text-align: center; transition: all 0.3s ease; margin-top: 20px; background-color: #FFF9C4; color: #614a00; }
+        .dynamic-message.positive-saving { background-color: #C8E6C9; color: #145214; }
         .dynamic-message h3 { margin-bottom: 10px; font-size: 1.2rem;}
         .dynamic-message p { margin: 5px 0; }
         .dynamic-message b { font-weight: 700; }
@@ -71,7 +66,7 @@
         .benefits-list li { margin-bottom: 12px; font-size: 1.1rem; font-weight: 500;}
 
         .plan-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 25px; margin-top: 30px;}
-        .plan-card { border: 2px solid var(--border-color); padding: 25px; border-radius: 12px; text-align: left; display: flex; flex-direction: column; transition: all 0.3s ease; position: relative; overflow: hidden; background: var(--white-bg); }
+        .plan-card { border: 2px solid var(--border-color); padding: 25px; border-radius: 12px; text-align: left; display: flex; flex-direction: column; transition: all 0.3s ease; position: relative; background: var(--white-bg); }
         .plan-card h3 { font-size: 1.3rem; margin-bottom: 10px;}
         .plan-card .price { font-size: 1.8rem; font-weight: 700; color: var(--dark-text); margin-bottom: 15px;}
         .plan-card .price span { font-size: 1rem; font-weight: 400; color: #777;}
@@ -81,10 +76,10 @@
         .plan-cta { display: block; background-color: var(--dark-text); color: var(--primary-yellow); padding: 12px; border-radius: 8px; text-decoration: none; font-weight: 600; text-align: center; transition: background-color 0.2s ease;}
         .plan-cta:hover { background-color: #000; color: #fff; }
         
-        .badge { background: var(--primary-yellow); color: var(--dark-text); padding: 4px 30px; position: absolute; top: 18px; right: -30px; transform: rotate(45deg); font-size: 0.8rem; font-weight: 700;}
-        .plan-card.popular { border-color: var(--border-color); }
-        .plan-card.popular .badge { background-color: #aaa; color: #fff;}
+        .plan-card::after { content: ''; display: none; background: var(--primary-yellow); color: var(--dark-text); padding: 4px 30px; position: absolute; top: 18px; right: -30px; transform: rotate(45deg); font-size: 0.8rem; font-weight: 700;}
+        .plan-card.popular::after { display: block; content: 'POPULAR'; background: #aaa; color: #fff; }
         .plan-card.recommended { border-color: var(--primary-yellow); transform: scale(1.05); box-shadow: 0 8px 30px rgba(255, 215, 0, 0.3); z-index: 10;}
+        .plan-card.recommended::after { display: block; content: 'RECOMMENDED'; }
 
         .cta-section { padding: 40px; text-align: center; background: var(--light-bg);}
         
@@ -167,9 +162,9 @@
                             </div>
                             <div class="result-line"><span>E-Wice Service Fee:</span><span id="ewiceFee" class="value">₦0</span></div>
                         </div>
-                        <div id="dynamicMessage" class="dynamic-message investment" aria-live="polite" aria-atomic="true">
+                        <div id="dynamicMessage" class="dynamic-message" aria-live="polite" aria-atomic="true">
                            <h3>Let's Crunch the Numbers!</h3>
-                           <p>Enter your laundry details to see your real costs.</p>
+                           <p>Enter your laundry details and click the button to see your real costs.</p>
                         </div>
                     </div>
                 </div>
@@ -191,8 +186,7 @@
                 <section id="plans-section" class="padded-section" style="background: var(--white-bg);">
                     <h2>Choose Your Perfect Plan</h2>
                     <div class="plan-grid">
-                        <div class="plan-card popular" id="card-Monthly-Standard">
-                             <div class="badge">POPULAR</div>
+                        <div class="plan-card" id="card-Monthly-Standard">
                              <h3>Monthly Standard</h3>
                              <div class="price">₦36,000 <span>/ month</span></div>
                              <ul>
@@ -261,7 +255,8 @@
         };
 
         const ui = {
-            salary: document.getElementById('salary'), clothes: document.getElementById('clothes'), bedsheets: document.getElementById('bedsheets'), duvets: document.getElementById('duvets'),
+            salary: document.getElementById('salary'), clothes: document.getElementById('clothes'),
+            bedsheets: document.getElementById('bedsheets'), duvets: document.getElementById('duvets'),
             calculateBtn: document.getElementById('calculate-btn'),
             resultsWrapper: document.getElementById('results-wrapper'),
             directRunningCost: document.getElementById('directRunningCost'), equipmentCost: document.getElementById('equipmentCost'),
@@ -273,6 +268,10 @@
         };
         
         ui.year.textContent = new Date().getFullYear();
+        document.addEventListener('DOMContentLoaded', () => {
+            const popularPlan = document.getElementById('card-Monthly-Standard');
+            if (popularPlan) popularPlan.classList.add('popular');
+        });
 
         function checkInputs() {
             const hasIncome = ui.salary.value.trim() !== '' && parseFloat(ui.salary.value) > 0;
@@ -280,16 +279,8 @@
             ui.calculateBtn.disabled = !(hasIncome && hasClothes);
         }
 
-        function revealCalculator() {
-            ui.resultsWrapper.classList.add('visible');
-            const message = ui.dynamicMessage;
-            if(!message.hasChildNodes() || message.querySelector('h3').textContent === "Let's Crunch the Numbers!") {
-                message.innerHTML = '<h3>Calculating...</h3><p>Your personalized results are being generated.</p>';
-            }
-        }
-        
         ui.calculateBtn.addEventListener('click', () => {
-            revealCalculator();
+            ui.resultsWrapper.classList.add('visible');
             calculate();
         });
 
@@ -317,11 +308,13 @@
 
             let isCustom = false;
             let recommendedPlan = "Monthly Standard";
-            if (numClothes <= 30 && numBedsheets <= 2 && numDuvets <= 1) recommendedPlan = "Monthly Standard";
-            else if (numClothes <= 35 && numBedsheets <= 6 && numDuvets <= 2) recommendedPlan = "Annually Standard";
-            else if (numClothes <= 50 && numBedsheets <= 6 && numDuvets <= 3) recommendedPlan = "Monthly Premium";
-            else if (numClothes <= 80 && numBedsheets <= 8 && numDuvets <= 3) recommendedPlan = "Annually Premium";
-            else { recommendedPlan = "Annually Premium"; isCustom = true; }
+            if (numClothes > 0 || numBedsheets > 0 || numDuvets > 0) {
+                 if (numClothes <= 30 && numBedsheets <= 2 && numDuvets <= 1) recommendedPlan = "Monthly Standard";
+                 else if (numClothes <= 35 && numBedsheets <= 6 && numDuvets <= 2) recommendedPlan = "Annually Standard";
+                 else if (numClothes <= 50 && numBedsheets <= 6 && numDuvets <= 3) recommendedPlan = "Monthly Premium";
+                 else if (numClothes <= 80 && numBedsheets <= 8 && numDuvets <= 3) recommendedPlan = "Annually Premium";
+                 else { recommendedPlan = "Annually Premium"; isCustom = true; }
+            }
             
             const ewiceServiceFee = SETTINGS.plans[recommendedPlan]?.price || 0;
             const netMonthlySavings = trueTotalAtHomeCost - ewiceServiceFee;
@@ -351,7 +344,6 @@
                 messageClass = "positive-saving";
                 message = `<h3>This is a Logical Financial Decision.</h3><p>You will <b>save ${formatNaira(netMonthly)} monthly</b>, which is over <b>${formatNaira(netAnnual)} back in your pocket annually.</b></p><p>You also reclaim over <b>${Math.round(annualHours)} hours per year</b> — like getting weeks of your life back. 🚀</p>`;
             } else {
-                messageClass = "investment";
                 message = `<h3>Here's the True Value Proposition.</h3><p>For a small premium of just <b>${formatNaira(Math.abs(netMonthly))} a month</b>, your annual investment in your own convenience is only ${formatNaira(Math.abs(netAnnual))}.</p><p>In exchange, you gain back over <b>${Math.round(annualHours)} hours of your life every single year</b>. This is a lifestyle upgrade. 🚀</p>`;
             }
             ui.dynamicMessage.innerHTML = message;
@@ -381,20 +373,12 @@
         }
         
         function highlightPlanCard(plan) {
-            ui.planCards.forEach(card => {
-                card.classList.remove('recommended', 'popular');
-                const badge = card.querySelector('.badge');
-                if(badge) badge.remove();
-            });
+            ui.planCards.forEach(card => card.classList.remove('recommended', 'popular'));
 
             const planId = `card-${plan.replace(/ /g, '-')}`;
             const recommendedCard = document.getElementById(planId);
             if (recommendedCard) {
                 recommendedCard.classList.add('recommended');
-                const badge = document.createElement('div');
-                badge.className = 'badge';
-                badge.textContent = 'Recommended';
-                recommendedCard.prepend(badge);
             }
         }
         
