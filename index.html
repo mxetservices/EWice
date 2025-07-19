@@ -76,11 +76,12 @@
         .plan-cta { display: block; background-color: var(--dark-text); color: var(--primary-yellow); padding: 12px; border-radius: 8px; text-decoration: none; font-weight: 600; text-align: center; transition: background-color 0.2s ease;}
         .plan-cta:hover { background-color: #000; color: #fff; }
         
-        .plan-card::after { content: ''; display: none; background: var(--primary-yellow); color: var(--dark-text); padding: 4px 30px; position: absolute; top: 18px; right: -30px; transform: rotate(45deg); font-size: 0.8rem; font-weight: 700;}
-        .plan-card.popular::after { display: block; content: 'POPULAR'; background: #aaa; color: #fff; }
+        .plan-card::after { display: none; padding: 4px 30px; position: absolute; top: 18px; right: -30px; transform: rotate(45deg); font-size: 0.8rem; font-weight: 700;}
+        .plan-card.popular { border-color: #555; }
+        .plan-card.popular::after { display: block; content: 'POPULAR'; background: #555; color: #fff; }
         .plan-card.recommended { border-color: var(--primary-yellow); transform: scale(1.05); box-shadow: 0 8px 30px rgba(255, 215, 0, 0.3); z-index: 10;}
-        .plan-card.recommended::after { display: block; content: 'RECOMMENDED'; }
-
+        .plan-card.recommended::after { display: block; content: 'RECOMMENDED'; background: var(--primary-yellow); color: var(--dark-text); }
+        
         .cta-section { padding: 40px; text-align: center; background: var(--light-bg);}
         
         footer { text-align: center; padding: 2.5rem 1.5rem; background: #2a2a2a; color: #ccc; }
@@ -263,14 +264,13 @@
             totalDirectCost: document.getElementById('totalDirectCost'), timeCost: document.getElementById('timeCost'),
             trueAtHomeCost: document.getElementById('trueAtHomeCost'), planNameLink: document.getElementById('planNameLink'),
             ewiceFee: document.getElementById('ewiceFee'), dynamicMessage: document.getElementById('dynamicMessage'),
-            whatsappCtaBottom: document.getElementById('whatsapp-cta-bottom'), year: document.getElementById('year'),
-            planCards: document.querySelectorAll('.plan-card'), planCtas: document.querySelectorAll('.plan-cta')
+            planCards: document.querySelectorAll('.plan-card'), planCtas: document.querySelectorAll('.plan-cta'),
+            year: document.getElementById('year')
         };
         
         ui.year.textContent = new Date().getFullYear();
         document.addEventListener('DOMContentLoaded', () => {
-            const popularPlan = document.getElementById('card-Monthly-Standard');
-            if (popularPlan) popularPlan.classList.add('popular');
+             document.getElementById('card-Monthly-Standard').classList.add('popular');
         });
 
         function checkInputs() {
@@ -321,7 +321,7 @@
 
             updateUI(trueTotalAtHomeCost, monthlyDirectRunningCost, monthlyEquipmentCost, totalMonthlyDirectCost, totalMonthlyTimeCost, recommendedPlan, ewiceServiceFee);
             updateDynamicMessage(netMonthlySavings, isCustom, hoursSpentPerMonth);
-            updateWhatsappLink(recommendedPlan);
+            updateWhatsappLinks();
             highlightPlanCard(recommendedPlan);
         }
 
@@ -364,8 +364,7 @@
             return `https://wa.me/${SETTINGS.contact.whatsappNumber}?text=${message}`;
         }
 
-        function updateWhatsappLink(recommendedPlan) {
-            ui.whatsappCtaBottom.href = getWhatsAppLink("your services"); 
+        function updateWhatsappLinks() {
             ui.planCtas.forEach(cta => {
                 const planName = cta.dataset.plan;
                 cta.href = getWhatsAppLink(planName);
@@ -373,8 +372,9 @@
         }
         
         function highlightPlanCard(plan) {
-            ui.planCards.forEach(card => card.classList.remove('recommended', 'popular'));
-
+            ui.planCards.forEach(card => {
+                card.classList.remove('recommended', 'popular');
+            });
             const planId = `card-${plan.replace(/ /g, '-')}`;
             const recommendedCard = document.getElementById(planId);
             if (recommendedCard) {
