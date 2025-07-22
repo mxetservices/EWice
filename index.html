@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>E-Wice Laundry Cost & Time Calculator</title>
+    <title>E-Wice Pro Service Laundry Calculator</title>
     <link rel="icon" type="image/png" href="assets/laundry-icon.png">
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -114,7 +114,7 @@
         <div class="main-content">
             <header class="hero">
                 <img src="assets/ewice-logo.png" alt="E-Wice Laundry Logo" class="hero-logo">
-                <h1>Let Us Save You TIME, MONEY, And STRESS!</h1>
+                <h1>Let Us Save You TIME, MONEY, And More!</h1>
             </header>
             <main>
                 <div class="calculator-grid">
@@ -122,19 +122,19 @@
                         <h2>Do You Know the <em>Real</em> Cost of DIY Laundry?</h2>
                         <div class="input-group">
                             <label for="salary">Monthly Income (Individual or Household)</label>
-                            <input type="number" id="salary" placeholder="e.g., 339000" oninput="checkInputs()">
+                            <input type="number" id="salary" placeholder="e.g., 339000" oninput="checkInputs()" onblur="validateInput(this)">
                         </div>
                         <div class="input-group">
                             <label for="clothes">Number of Clothes</label>
-                            <input type="number" id="clothes" placeholder="e.g., 30" oninput="checkInputs()">
+                            <input type="number" id="clothes" placeholder="e.g., 30" oninput="checkInputs()" onblur="validateInput(this)">
                         </div>
                         <div class="input-group">
                             <label for="bedsheets">Number of Bedsheets</label>
-                            <input type="number" id="bedsheets" placeholder="e.g., 2" oninput="checkInputs()">
+                            <input type="number" id="bedsheets" placeholder="e.g., 2" oninput="checkInputs()" onblur="validateInput(this)">
                         </div>
                         <div class="input-group">
                             <label for="duvets">Number of Duvets</label>
-                            <input type="number" id="duvets" placeholder="e.g., 1" oninput="checkInputs()">
+                            <input type="number" id="duvets" placeholder="e.g., 1" oninput="checkInputs()" onblur="validateInput(this)">
                         </div>
                         <button id="calculate-btn" disabled>Show My Real Cost!</button>
                     </div>
@@ -170,7 +170,7 @@
                            <h3>Let's Crunch the Numbers!</h3>
                            <p>Enter your laundry details and click the button to see your real costs.</p>
                         </div>
-                         <div class="initially-hidden" style="text-align: center;" id="inline-cta-wrapper">
+                        <div class="initially-hidden" style="text-align: center;" id="inline-cta-wrapper">
                              <a id="subscribe-now-inline" href="#" target="_blank" class="cta-button cta-inline">Subscribe Now</a>
                         </div>
                     </div>
@@ -235,10 +235,11 @@
                         </div>
                     </div>
                 </section>
-
+                
                 <section class="cta-section">
                      <a id="whatsapp-cta-bottom" href="#" target="_blank" class="cta-button">Have Questions? Contact Us</a>
                 </section>
+
             </main>
         </div>
 
@@ -282,8 +283,10 @@
         };
         
         ui.year.textContent = new Date().getFullYear();
+
         document.addEventListener('DOMContentLoaded', () => {
              document.getElementById('card-Monthly-Standard').classList.add('popular');
+             initializeWhatsappLinks();
         });
 
         function checkInputs() {
@@ -294,6 +297,7 @@
         
         ['salary', 'clothes', 'bedsheets', 'duvets'].forEach(id => {
             ui[id].addEventListener('input', checkInputs);
+            ui[id].addEventListener('blur', () => validateInput(ui[id]));
         });
 
         ui.calculateBtn.addEventListener('click', () => {
@@ -355,19 +359,25 @@
         function updateDynamicMessage(netMonthly, isCustom, hours) {
             let message = ""; let messageClass = "investment";
             const netAnnual = netMonthly * 12; const annualHours = hours * 12;
+            let hoursText = (annualHours > 0) ? `over <b>${Math.round(annualHours)} hours</b>` : "hours";
 
             if (isCustom) {
                  message = `<h3>A Plan as Unique as Your Needs!</h3><p>Your laundry volume may require a custom solution. Our top plan is recommended as a starting point.</p><p>Please <b>contact us</b> to get your tailored quote! 🚀</p>`;
             } else if (netMonthly > 0) {
                 messageClass = "positive-saving";
-                message = `<h3>This is a Logical Financial Decision.</h3><p>You will <b>save ${formatNaira(netMonthly)} monthly</b>, which is over <b>${formatNaira(netAnnual)} back in your pocket annually.</b></p><p>You also reclaim over <b>${Math.round(annualHours)} hours per year</b> — like getting weeks of your life back. 🚀</p>`;
+                message = `<h3>This is a Logical Financial Decision.</h3><p>You will <b>save ${formatNaira(netMonthly)} monthly</b>, which is over <b>${formatNaira(netAnnual)} back in your pocket annually.</b></p><p>You also reclaim ${hoursText} per year — like getting weeks of your life back. 🚀</p>`;
             } else {
-                message = `<h3>Here's the True Value Proposition.</h3><p>For a small premium of just <b>${formatNaira(Math.abs(netMonthly))} a month</b>, your annual investment in your own convenience is only ${formatNaira(Math.abs(netAnnual))}.</p><p>In exchange, you gain back over <b>${Math.round(annualHours)} hours of your life every single year</b>. This is a lifestyle upgrade. 🚀</p>`;
+                message = `<h3>Here's the True Value Proposition.</h3><p>For a small premium of just <b>${formatNaira(Math.abs(netMonthly))} a month</b>, your annual investment in your own convenience is only ${formatNaira(Math.abs(netAnnual))}.</p><p>In exchange, you gain back ${hoursText} of your life every single year. This is a lifestyle upgrade. 🚀</p>`;
             }
             ui.dynamicMessage.innerHTML = message;
             ui.dynamicMessage.className = `dynamic-message ${messageClass}`;
         }
         
+        function validateInput(element) {
+            if (parseFloat(element.value) < 0) { element.classList.add('invalid-input'); } 
+            else { element.classList.remove('invalid-input'); }
+        }
+
         function formatNaira(amount) {
             return new Intl.NumberFormat('en-NG', { style: 'currency', currency: 'NGN', minimumFractionDigits: 0 }).format(amount);
         }
@@ -376,14 +386,17 @@
             const message = encodeURIComponent(`${SETTINGS.contact.defaultWhatsappMessage}${planName} plan.`);
             return `https://wa.me/${SETTINGS.contact.whatsappNumber}?text=${message}`;
         }
-
-        function updateWhatsappLinks(recommendedPlan) {
-            ui.subscribeNowInline.href = getWhatsAppLink(recommendedPlan);
+        
+        function initializeWhatsappLinks() {
             ui.whatsappCtaBottom.href = getWhatsAppLink("your services");
             ui.planCtas.forEach(cta => {
                 const planName = cta.dataset.plan;
                 cta.href = getWhatsAppLink(planName);
             });
+        }
+
+        function updateWhatsappLinks(recommendedPlan) {
+            ui.subscribeNowInline.href = getWhatsAppLink(recommendedPlan);
         }
         
         function highlightPlanCard(plan) {
